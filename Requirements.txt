@@ -1,0 +1,32 @@
+1. Hardware Requirements:
+
+| **Component**           | **Description**                                                         |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Computer/Workstation    | Minimum: 8GB RAM, i5/i7 processor, 256GB SSD                            |
+| GPU (Optional)          | For faster training (especially with deep learning models like CNN/RNN) |
+| Internet Connectivity   | Required for accessing real-time data or APIs (weather, maps, etc.)     |
+| Edge Devices (Optional) | Raspberry Pi, Jetson Nano, traffic cameras (for real-time deployment)   |
+
+2. Software Requirements:
+                                                                        
+| **Software**           | **Purpose**                               |
+| ---------------------- | ----------------------------------------- |
+| Python (3.8+)          | Main programming language                 |
+| Jupyter Notebook / IDE | For code development and visualization    |
+| XGBoost / scikit-learn | Machine learning model development        |
+| pandas, NumPy          | Data preprocessing and manipulation       |
+| matplotlib, seaborn    | Data visualization and plotting residuals |
+| FastAPI or Flask       | To deploy the model as a REST API         |
+| joblib / pickle        | For saving and loading trained models     |
+| Docker (optional)      | For containerized deployment              |
+| Git                    | Version control system                    |
+
+3. Data Requirements:
+
+| **Data Type**                  | **Details**                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| Historical Accident Data       | Includes time, location, cause, road type, severity, etc.                      |
+| Traffic Flow Data              | Vehicle count, density, speed from road sensors or city traffic systems        |
+| Weather Data                   | Temperature, rain, fog, snow, visibility, wind (can use APIs like OpenWeather) |
+| Time & Location Data           | Timestamps, day of week, latitude-longitude                                    |
+| Additional Features (optional) | Driver behavior, vehicle types, emergency response time                        |

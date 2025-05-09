@@ -1,0 +1,60 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+import gradio as gr
+
+# Step 1: Load the dataset
+url = "https://github.com/T-Mohamed-Shafeek/Data-Analysis-on-Tamil-Nadu-Road-Accidents/raw/main/updated_dataset.csv"
+df = pd.read_csv(url)
+
+# Step 2: Select relevant features
+df = df[['District', 'total__2020', '2020_fatal', '2020_nonfatal', 'latitude', 'longitude']]
+df.dropna(inplace=True)
+
+# Step 3: Feature Engineering
+df['Fatal_Rate'] = df['2020_fatal'] / df['total__2020']
+df['Severity'] = df['Fatal_Rate'].apply(lambda x: 1 if x > 0.3 else 0)  # 1 = severe, 0 = moderate
+
+# Encode District
+le = LabelEncoder()
+df['District_Code'] = le.fit_transform(df['District'])
+
+# Step 4: Define features and target
+X = df[['District_Code', 'total__2020', '2020_nonfatal', 'latitude', 'longitude']]
+y = df['Severity']
+
+# Step 5: Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 6: Train model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Step 7: Evaluate model
+y_pred = model.predict(X_test)
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Step 8: Gradio Interface
+def predict_severity(district_code, total_accidents, nonfatal, lat, lng):
+    input_data = np.array([[district_code, total_accidents, nonfatal, lat, lng]])
+    prediction = model.predict(input_data)[0]
+    return "Severe" if prediction == 1 else "Moderate"
+
+interface = gr.Interface(
+    fn=predict_severity,
+    inputs=[
+        gr.Number(label="District Code (0-31)"),
+        gr.Number(label="Total Accidents (2020)"),
+        gr.Number(label="Non-Fatal Accidents (2020)"),
+        gr.Number(label="Latitude"),
+        gr.Number(label="Longitude"),
+    ],
+    outputs="text",
+    title="Road Accident Severity Predictor",
+    description="Predict whether a district has severe or moderate accident severity using 2020 data"
+)
+
+interface.launch()
